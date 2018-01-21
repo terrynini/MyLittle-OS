@@ -34,7 +34,7 @@ SECTION MBR vstart=0x7c00
 
     mov eax,LOADER_START_SECTOR
     mov bx,LOADER_BASE_ADDR
-    mov cx,1
+    mov cx,4
     call read_disk
 
     jmp LOADER_BASE_ADDR

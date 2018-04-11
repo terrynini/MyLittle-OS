@@ -1,5 +1,8 @@
 %include "boot.inc"
-SECTION MBR vstart=0x7c00
+
+
+SECTION MBR vstart=0x7c00  
+;clear all register and set stack at 0x7c00 , set gs to the address of display card in text mode
     mov ax,cs
     mov ds,ax
     mov es,ax
@@ -10,12 +13,20 @@ SECTION MBR vstart=0x7c00
     mov gs, ax
 
 ;clean screen
+    ;AH = function number
+    ;AL = num of lines to scroll in (0 = blank entire rectangle)
+    ;BH = video arrtribute to be use on blank lines
+    ;(CH,CL) = row,clm of lower-right corner to scroll
+    ;(DH,DL) = row,clm of upper-left corner to scroll
+    ;int VGA, there are 25 lines and each has 80 words, index if begin from 0 , so DH=0x18, DL=0x4f 
+
     mov ax, 0x600
     mov bx, 0x700
     mov cx, 0
     mov dx, 0x184f
 
     int 0x10
+
 ;Put data on vedio RAM
     mov byte [gs:0x00], '1'
     mov byte [gs:0x01], 0xA4 ; A=background green & blinking, 4=red front

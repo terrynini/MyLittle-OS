@@ -109,6 +109,7 @@ error_hlt:
 jmp $
 
 ;==setup PDE PTE ==
+;把記憶體清零，等等作為分頁目錄
 setup_page:
     mov ecx, 4096
     mov esi,0
@@ -120,6 +121,16 @@ create_pde:
     mov eax,PAGE_DIR_TABLE_POS
     add eax,0x1000
     mov ebx,eax
+
+    or eax, PG_US_U | PG_RW_W | PG_P
+    mov [PAGE_DIR_TABLE_POS + 0x0], eax
+    mov [PAGE_DIR_TABLE_POS + 0xc00], eax
+    sub eax, 0x1000
+    mov [PAGE_DIR_TABLE_POS + 4092], eax
+    
+    mov ecx, 256
+    mov esi, 0 
+
 ;--------------------------------------------------
 
 GDT_BASE:   

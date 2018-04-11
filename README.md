@@ -3,6 +3,7 @@
 * Before use command `make` You should create a image first:
 `bximage -hd=60 -imgmode="flat" -q hd60M.img`
 
+## mbr.S
 * 在顯卡文字模式下，使用連續兩bytes來顯示一個字元，其結構如下：
 
 <table align="center">

@@ -42,8 +42,8 @@
 
 <table>
     <tr>
-        <th align="center" rowspan="2">IO 通訊埠</th>
-        <th align="center" rowspan="2">通訊埠用途</th>
+        <th align="center" colspan="2">IO 通訊埠</th>
+        <th align="center" colspan="2">通訊埠用途</th>
     </tr>
     <tr>
         <th align="center">Primary Channel</th>
@@ -52,7 +52,7 @@
         <th align="center">寫入操作時</th>
     </tr>
     <tr>
-        <td rowspan="4">Command Block registers</td>
+        <td colspan="4">Command Block registers</td>
     </tr>
     <tr>
         <td>0x1F0</td>
@@ -103,7 +103,7 @@
         <td>Command</td>
     </tr>
     <tr>
-        <td rowspan="4">Control Block registers</td>
+        <td colspan="4">Control Block registers</td>
     </tr>
     <tr>
         <td>0x3F6</td>

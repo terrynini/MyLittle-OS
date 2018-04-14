@@ -2,6 +2,8 @@
 
 * Before use command `make` You should create a image first:
 `bximage -hd=60 -imgmode="flat" -q hd60M.img`
+`make`
+`boches`
 
 ## mbr.S
 * 在顯卡文字模式下，使用連續兩bytes來顯示一個字元，其結構如下：
@@ -38,7 +40,7 @@
   </tr>
 </table>
 
-* 硬碟控制器主要通訊埠(可參照 AT Attachment with Packet Interface相關手冊)
+* 硬碟控制器主要通訊埠(可參照 AT Attachment with Packet Interface相關[手冊](http://www.t13.org/Documents/UploadedDocuments/docs2007/D1532v1r4b-AT_Attachment_with_Packet_Interface_-_7_Volume_1.pdf) 共三冊)
 
 <table>
     <tr>
@@ -52,7 +54,7 @@
         <th align="center">寫入操作時</th>
     </tr>
     <tr>
-        <td colspan="4">Command Block registers</td>
+        <td align="center" colspan="4">Command Block registers</td>
     </tr>
     <tr>
         <td>0x1F0</td>
@@ -103,7 +105,7 @@
         <td>Command</td>
     </tr>
     <tr>
-        <td colspan="4">Control Block registers</td>
+        <td align="center" colspan="4">Control Block registers</td>
     </tr>
     <tr>
         <td>0x3F6</td>

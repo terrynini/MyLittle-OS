@@ -1,7 +1,7 @@
 ;----------loader---------------
 
-LOADER_BASE_ADDR    equ 0x900
-LOADER_START_SECTOR equ 0x2
+LOADER_BASE_ADDR    equ 0x500
+LOADER_START_SECTOR equ 0x1
 
 ;------------gdt----------------
 DESC_G_4K   equ (1<<23)

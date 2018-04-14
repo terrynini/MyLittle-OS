@@ -54,38 +54,41 @@ SECTION MBR vstart=0x7c00
     jmp LOADER_BASE_ADDR
 
 read_disk:
-;eax:LBA, bx:port address, cx:number of blocks
+;---------------------------------------------
+;read loder from disk
+;eax:LBA num, bx: data address, cx:number of blocks
+;---------------------------------------------
 ;maintain the origin value
     mov esi, eax
     mov di, cx
 ;read from disk
-;set sector count
+;set register for sector count
     mov dx, 0x1f2
     mov al, cl
     out dx, al
 
     mov eax, esi
-;set LBA low 
+;set register for LBA low 
     mov dx, 0x1f3
     out dx, al
-;set LBA mid
+;set register for LBA mid
     mov cl, 8
     shr eax, cl
     mov dx, 0x1f4
     out dx, al
-;set LBA high
+;set register for LBA high
     shr eax, cl
     mov dx, 0x1f5
     out dx, al
-;set device
+;set register for device
     shr eax, cl
-    and al, 0x0f
-    or  al, 0xe0
+    and al, 0x0f    ;24~27 bits for lba
+    or  al, 0xe0    ;lba mode
     mov dx, 0x1f6
     out dx, al
-;set command "write"
+;set register for command 
     mov dx, 0x1f7
-    mov al, 0x20
+    mov al, 0x20    ;0x20 is read
     out dx, al
 ;check the status of disk
     not_ready:
@@ -94,7 +97,8 @@ read_disk:
         and al, 0x88
         cmp al, 0x08
         jnz not_ready
-;read data
+
+;read data from ATA register 0x1f0
     mov ax, di
     mov dx, 256
     mul dx
@@ -107,7 +111,7 @@ read_disk:
         loop go_on_read
     ret
 
-;padding the rest space of a sector
+;padding the rest space of the sector
     times 510-($-$$) db 0
 ;magic number
     db 0x55, 0xaa

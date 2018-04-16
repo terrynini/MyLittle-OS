@@ -76,18 +76,19 @@ e801_failed_go_88:
 
     mem_get_ok:
         mov [total_mem_bytes],edx
+
 ;-----protect mode-----------
 ;1. enable A20
 ;2. load gdt
 ;3. set pe in cr0
 
-;==1
+;==1==
     in  al,0x92
     or  al,0000_0010b
     out 0x92,al
-;==2
+;==2==
     lgdt    [gdt_ptr]
-;==3
+;==3==
     mov eax,cr0
     or  eax,1
     mov cr0,eax
@@ -95,6 +96,7 @@ e801_failed_go_88:
     jmp dword SELECTOR_CODE:p_mode_start
 
 [BITS 32]
+;已進入32bits保護模式，以32位元指令的格式組譯指令
 p_mode_start:
     mov ax,SELECTOR_DATA
     mov ds,ax

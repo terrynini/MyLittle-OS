@@ -114,3 +114,54 @@
         <td>Device Control</td>
     </tr>
 </table>
+
+* Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor))
+一個segment discriptor是64bit，`Base Address` 和 `Segment Limit`非常破碎，是由於80286（16位元CPU，擁有保護模式及24位元的位址線）當初做出來試水溫，之後的Intel為了往前兼容，後來的結構才會變成這樣：
+<table align="center">
+<tbody><tr>
+<th>31</th>
+<th>—</th>
+<th>24</th>
+<th>23</th>
+<th>22</th>
+<th>21</th>
+<th>20</th>
+<th>19</th>
+<th>—</th>
+<th>16</th>
+<th>15</th>
+<th>14</th>
+<th>13</th>
+<th>12</th>
+<th>11</th>
+<th>10</th>
+<th>9</th>
+<th>8</th>
+<th>7</th>
+<th>—</th>
+<th>0</th>
+</tr>
+<tr>
+<td colspan="3">Base Address[31:24]</td>
+<td>G</td>
+<td>D</td>
+<td>L</td>
+<td>AVL</td>
+<td colspan="3">Segment Limit[19:16]</td>
+<td>P</td>
+<td colspan="2">DPL</td>
+<td>1</td>
+<td>1</td>
+<td>C</td>
+<td>R</td>
+<td>A</td>
+<td colspan="3">Base Address[23:16]</td>
+</tr>
+<tr>
+<td colspan="10">Base Address[15:0]</td>
+<td colspan="11">Segment Limit[15:0]</td>
+</tr>
+</tbody></table>
+
+    *   G(Granularity):粒度，清零的話表示單位為 1 byte，set時則表示單位為 4096 byte。
+    * 

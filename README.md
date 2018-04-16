@@ -164,5 +164,5 @@
 </tbody>
 </table>
 
-* *   G(Granularity):粒度，清零的話表示單位為 1 byte，set時則表示單位為 4096 byte。
-* * 
+  *   G(Granularity):粒度，清零的話表示單位為 1 byte，set時則表示單位為 4096 byte。
+  * 

@@ -167,4 +167,7 @@ __Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) 
 </table>
 
   *   **G(Granularity):** 粒度，清零的話表示單位為 1 byte，set時則表示單位為 4096 byte。
-  *     
+  *   **實際界限:** 實際界限 = (Segment Limit + 1) * Granularity - 1
+    *   Discriptor 中的 segment limit只是單位，要乘上粒度才能得到真正的界限值
+    *   Segment Limit + 1 是因為 Segment Limit 從0算起
+    *   最後減1是因為，記憶體位址從0開始算起

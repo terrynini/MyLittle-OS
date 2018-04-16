@@ -163,11 +163,11 @@ __Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) 
 </tbody>
 </table>
 
-*   **G(Granularity):** 粒度，清零的話表示單位為 1 byte，set時則表示單位為 4096 byte。
-*   **實際界限:** 實際界限 = (Segment Limit + 1) * Granularity - 1
+*   **G:** 粒度(Granularity)，清零的話表示單位為 1 byte，set時則表示單位為 4096 byte。
+*   **實際界限:** (Segment Limit + 1) * Granularity - 1
     *   Discriptor 中的 Segment limit只是單位，要乘上粒度才能得到真正的界限值
     *   Segment Limit + 1 是因為 Segment Limit 從0算起
-    *   最後減1是因為，記憶體位址從0開始算起
+    *   最後減1是因為記憶體位址從0開始算起
 *   **S:** S位通常為1，為0時做特殊用途(task-gate, interrupt-gate, call gate, etc)
 *   **type:** 若S為0，用type指定gate，S為1時，最低位A，為Accessed位，被CPU存取過後會被設為1
     * 第二位R或W，可否讀取或可否寫入

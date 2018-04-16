@@ -1,8 +1,8 @@
 # ReturnOfKing-OS
 
-* Before use command `make` You should create a image first:
-`bximage -hd=60 -imgmode="flat" -q hd60M.img`
-`make`
+**Before use command `make` You should create a image first:**<br>
+`bximage -hd=60 -imgmode="flat" -q hd60M.img`<br>
+`make`<br>
 `boches`
 
 ## mbr.S

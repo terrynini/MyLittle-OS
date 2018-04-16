@@ -6,7 +6,7 @@
 `boches`
 
 ## mbr.S
-* 在顯卡文字模式下，使用連續兩bytes來顯示一個字元，其結構如下：
+### 在顯卡文字模式下，使用連續兩bytes來顯示一個字元，其結構如下：
 
 <table>
   <tr>
@@ -40,7 +40,7 @@
   </tr>
 </table>
 
-* 硬碟控制器主要通訊埠(可參照 AT Attachment with Packet Interface相關[手冊](http://www.t13.org/Documents/UploadedDocuments/docs2007/D1532v1r4b-AT_Attachment_with_Packet_Interface_-_7_Volume_1.pdf) 共三冊)
+### 硬碟控制器主要通訊埠(可參照 AT Attachment with Packet Interface相關[手冊](http://www.t13.org/Documents/UploadedDocuments/docs2007/D1532v1r4b-AT_Attachment_with_Packet_Interface_-_7_Volume_1.pdf) 共三冊)
 
 <table>
     <tr>
@@ -115,7 +115,9 @@
     </tr>
 </table>
 
-* Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor))
+## loader.S
+
+### Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) : <br>
 一個segment discriptor是64bit，`Base Address` 和 `Segment Limit`非常破碎，是由於80286（16位元CPU，擁有保護模式及24位元的位址線）當初做出來試水溫，之後的Intel為了往前兼容，後來的結構才會變成這樣：
 <table align="center">
 <tbody><tr>

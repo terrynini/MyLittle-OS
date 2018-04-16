@@ -152,11 +152,8 @@ __Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) 
 <td colspan="3">Segment Limit[19:16]</td>
 <td>P</td>
 <td colspan="2">DPL</td>
-<td>1</td>
-<td>1</td>
-<td>C</td>
-<td>R</td>
-<td>A</td>
+<td>S</td>
+<td colspan="4">type</td>
 <td colspan="3">Base Address[23:16]</td>
 </tr>
 <tr>
@@ -168,6 +165,15 @@ __Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) 
 
 *   **G(Granularity):** 粒度，清零的話表示單位為 1 byte，set時則表示單位為 4096 byte。
 *   **實際界限:** 實際界限 = (Segment Limit + 1) * Granularity - 1
-    *   Discriptor 中的 segment limit只是單位，要乘上粒度才能得到真正的界限值
+    *   Discriptor 中的 Segment limit只是單位，要乘上粒度才能得到真正的界限值
     *   Segment Limit + 1 是因為 Segment Limit 從0算起
     *   最後減1是因為，記憶體位址從0開始算起
+*   **S:** S位通常為1，為0時做特殊用途(task-gate, interrupt-gate, call gate, etc)
+*   **type:** 若S為0，用type指定gate，S為1時，最低位A，為Accessed位，被CPU存取過後會被設為1
+    * 第二位R或W，可否讀取或可否寫入
+    * 第三位E或C，擴充方向(堆疊向下，程式資料向上)或一致性(Conforming)
+*   **DPL:** Discriptor Privilege Level，特權等級，0~3，0為最高。
+*   **P:**  Present，該段是否存在於記憶體中，不存在則拋出異常，做swap。
+*   **AVL:** Available，作業系統可以隨意用此位元，無特別用途。
+*   **L:**  為1表示64位元程式碼片段，為0為32位元程式碼片段。
+*   **D:** 為相容80286保護模式還是為16bit(80286為16位元的CPU)，因此有D來表明運算元和有效位址大小，0為16bit，1為32bit。

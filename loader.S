@@ -31,7 +31,7 @@ section loader vstart=LOADER_BASE_ADDR
         mov eax, 0x0000e820
         mov ecx, 20
         int 0x15
-        jc  e820_failed_go_e801
+        jc  e820_failed_try_e801
     
         add di, cx
         inc word [ards_nr]
@@ -41,6 +41,7 @@ section loader vstart=LOADER_BASE_ADDR
     mov cx, [ards_nr]
     mov ebx, ards_buf
     xor edx, edx
+;通常最大塊的記憶體不會無法使用
     find_max_mem_area:
         mov eax, [ebx]
         add eax, [ebx+8]
@@ -50,13 +51,13 @@ section loader vstart=LOADER_BASE_ADDR
         mov edx, eax
     next_ards:
         loop find_max_mem_area
-        jmp  mem_get_ok
+    jmp  mem_get_ok
 ;--------e801 get memory size--------
-e820_failed_go_e801:
+e820_failed_try_e801:
     mov ax, 0xe801
     int 0x15
     jc  e801_failed_go_88        
-    ;below 15MB        
+;below 15MB        
     mov cx, 0x400
     mul cx
     shl edx, 16
@@ -64,7 +65,7 @@ e820_failed_go_e801:
     or edx, eax
     add edx, 0x100000
     mov esi, edx
-    ;above 16MB
+;above 16MB
     xor eax, eax
     mov ax, bx
     mov ecx, 0x10000
@@ -79,15 +80,15 @@ e801_failed_go_88:
     int 0x15
     jc error_hlt
     and eax, 0x0000ffff
-
     mov cx, 0x400
     mul cx
     shl edx, 16
     or  edx, eax
     add edx, 0x100000
 
-    mem_get_ok:
-        mov [total_mem_bytes], edx
+;儲存得到的記憶體資訊
+mem_get_ok:
+    mov [total_mem_bytes], edx
 
 ;--------進入保護模式--------
 ;1. 開啟 A20 位址線
@@ -176,6 +177,7 @@ gdt_ptr:
     dw  GDT_LIMIT
     dd  GDT_BASE
 
+;Address Range Descriptor Structure
 ards_buf times 200 db 0
 ards_nr dw 0
 

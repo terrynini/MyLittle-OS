@@ -117,8 +117,8 @@
 
 ## loader.S
 
-### Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) :
-一個segment discriptor是64bit，`Base Address` 和 `Segment Limit`非常破碎，是由於80286（16位元CPU，擁有保護模式及24位元的位址線）當初做出來試水溫，之後的Intel為了往前兼容，後來的結構才會變成這樣：
+### Segment Descriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) :
+一個segment Descriptor是64bit，`Base Address` 和 `Segment Limit`非常破碎，是由於80286（16位元CPU，擁有保護模式及24位元的位址線）當初做出來試水溫，之後的Intel為了往前兼容，後來的結構才會變成這樣：
 <table align="center">
 <tbody><tr>
 <th>31</th>
@@ -165,14 +165,14 @@
 
 *   **G:** 粒度(Granularity)，清零的話表示單位為 1 byte，set時則表示單位為 4096 byte。
 *   **實際界限:** (Segment Limit + 1) * Granularity - 1
-    *   Discriptor 中的 Segment limit只是單位，要乘上粒度才能得到真正的界限值
+    *   Descriptor 中的 Segment limit只是單位，要乘上粒度才能得到真正的界限值
     *   Segment Limit + 1 是因為 Segment Limit 從0算起
     *   最後減1是因為記憶體位址從0開始算起
 *   **S:** S位通常為1，為0時做特殊用途(task-gate, interrupt-gate, call gate, etc)
 *   **type:** 若S為0，用type指定gate，S為1時，最低位A，為Accessed位，被CPU存取過後會被設為1
     * 第二位R或W，可否讀取或可否寫入
     * 第三位E或C，擴充方向(堆疊向下，程式資料向上)或一致性(Conforming)
-*   **DPL:** Discriptor Privilege Level，特權等級，0~3，0為最高。
+*   **DPL:** Descriptor Privilege Level，特權等級，0~3，0為最高。
 *   **P:**  Present，該段是否存在於記憶體中，不存在則拋出異常，做swap。
 *   **AVL:** Available，作業系統可以隨意用此位元，無特別用途。
 *   **L:**  為1表示64位元程式碼片段，為0為32位元程式碼片段。
@@ -186,3 +186,13 @@
 |88h   |      |最多偵測到64MB的記憶體|
 |E8h   |01h   |檢測低15MB及16MB~4GB的記憶體|
 |E8h   |20h   |可以檢測到全部的記憶體|
+
+### Address Range Descriptor Structure:
+
+|offset|name|Description|
+|:----:|:--:|:---------|
+|0|BaseAddrLOw|基底位址的低32位|
+|4|BaseAddrHigh|基底位址的高32位|
+|8|LengthLow|記憶體的低32位元，byte為單位|
+|12|LengthHigh|記憶體的高32位元，byte為單位|
+|16|Type|記憶體類型，1:作業系統可使用、2或其他:作業系統不可使用|

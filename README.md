@@ -197,7 +197,7 @@
 |12|LengthHigh|記憶體的高32位元，byte為單位|
 |16|Type|記憶體類型，1:作業系統可使用、2或其他:作業系統不可使用|
 
-### 二級分頁(two level page table)
+### 二級分頁(two level page table)
 
 * 分頁目錄項(Page Directory Entry)
 |bit    |描述    |

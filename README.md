@@ -200,6 +200,7 @@
 ### 二級分頁(two level page table)
 
 * 分頁目錄項(Page Directory Entry)
+
 |bit    |描述    |
 |:-----:|:-----|
 |12~31|分頁表實體位址12~31位|

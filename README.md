@@ -6,7 +6,7 @@
 `boches`
 
 ## mbr.S
-__在顯卡文字模式下，使用連續兩bytes來顯示一個字元，其結構如下：__
+### 在顯卡文字模式下，使用連續兩bytes來顯示一個字元，其結構如下：
 
 <table>
   <tr>
@@ -40,7 +40,7 @@ __在顯卡文字模式下，使用連續兩bytes來顯示一個字元，其結�
   </tr>
 </table>
 
-__硬碟控制器主要通訊埠(可參照 AT Attachment with Packet Interface相關[手冊](http://www.t13.org/Documents/UploadedDocuments/docs2007/D1532v1r4b-AT_Attachment_with_Packet_Interface_-_7_Volume_1.pdf) 共三冊)__
+### 硬碟控制器主要通訊埠(可參照 AT Attachment with Packet Interface相關[手冊](http://www.t13.org/Documents/UploadedDocuments/docs2007/D1532v1r4b-AT_Attachment_with_Packet_Interface_-_7_Volume_1.pdf) 共三冊)
 
 <table>
     <tr>
@@ -117,7 +117,7 @@ __硬碟控制器主要通訊埠(可參照 AT Attachment with Packet Interface�
 
 ## loader.S
 
-__Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) :__<br>
+### Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) :
 一個segment discriptor是64bit，`Base Address` 和 `Segment Limit`非常破碎，是由於80286（16位元CPU，擁有保護模式及24位元的位址線）當初做出來試水溫，之後的Intel為了往前兼容，後來的結構才會變成這樣：
 <table align="center">
 <tbody><tr>
@@ -178,7 +178,7 @@ __Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) 
 *   **L:**  為1表示64位元程式碼片段，為0為32位元程式碼片段。
 *   **D:** 為相容80286保護模式還是為16bit(80286為16位元的CPU)，因此有D來表明運算元和有效位址大小，0為16bit，1為32bit。
 
-#### 取得記憶體大小:
+### 取得記憶體大小:
 使用[BIOS中斷0x15](https://en.wikipedia.org/wiki/BIOS_interrupt_call)來取得記憶體大小:
 
 |AH    |AL    |Description|

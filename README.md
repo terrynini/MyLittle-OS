@@ -178,7 +178,7 @@ __Segment discriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) 
 *   **L:**  為1表示64位元程式碼片段，為0為32位元程式碼片段。
 *   **D:** 為相容80286保護模式還是為16bit(80286為16位元的CPU)，因此有D來表明運算元和有效位址大小，0為16bit，1為32bit。
 
-__取得記憶體大小:__<br>
+#### 取得記憶體大小:
 使用[BIOS中斷0x15](https://en.wikipedia.org/wiki/BIOS_interrupt_call)來取得記憶體大小:
 
 |AH    |AL    |Description|

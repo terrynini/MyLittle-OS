@@ -1255,9 +1255,9 @@ parport1: enabled=1, file="parport.out"
 # The maximum amount of memory supported is 2048Mb.
 # The 'MEGS' option is deprecated. Use 'MEMORY' option instead.
 #=======================================================================
-#megs: 256
+megs: 256
 #megs: 128
 #megs: 64
-megs: 32
+#megs: 32
 #megs: 16
 #megs: 8

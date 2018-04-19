@@ -41,7 +41,6 @@ section loader vstart=LOADER_BASE_ADDR
     mov cx, [ards_nr]
     mov ebx, ards_buf
     xor edx, edx
-;通常最大塊的記憶體不會無法使用
     find_max_mem_area:
         mov eax, [ebx]
         add eax, [ebx+8]

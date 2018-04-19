@@ -18,7 +18,7 @@ SECTION MBR vstart=0x7c00
     ;BH = video arrtribute to be use on blank lines
     ;(CH, CL) = row, clm of lower-right corner to scroll
     ;(DH, DL) = row, clm of upper-left corner to scroll
-    ;int VGA, there are 25 lines and each has 80 words, index if begin from 0 , so DH=0x18, DL=0x4f 
+    ;in VGA, there are 25 lines and each has 80 words, index is begin from 0 , so DH=0x18, DL=0x4f 
 
     mov ax, 0x600
     mov bx, 0x700

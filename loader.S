@@ -14,6 +14,7 @@ SELECTOR_VIDEO  equ (0x0003<<3) + TI_GDT + RPL0
 total_mem_bytes equ 0x510
 
 section loader vstart=LOADER_BASE_ADDR
+;--------列印字串--------
     mov sp, LOADER_BASE_ADDR
     mov bp, loadermsg
     mov cx, 17
@@ -21,6 +22,7 @@ section loader vstart=LOADER_BASE_ADDR
     mov bx, 0x001f
     mov dx, 0x1800
     int 0x10
+
 ;--------e820 get memory size--------
     xor ebx, ebx
     mov edx, 0x534d4150
@@ -104,12 +106,14 @@ e801_failed_go_88:
     mov cr0, eax
 
 ;用 far jump 來設定段暫存器，使之為保護模式下的選擇子
+;且清空pipeline，避免執行解碼錯誤的指令(真實模式下GDTR只使用低20位，其他位為0，D位會是0，造成把32bit指令解碼為16bit指令)
     jmp dword SELECTOR_CODE:p_mode_start
 
 [BITS 32]
 ;以32位元指令的格式組譯指令
 
 p_mode_start:
+;初始化段暫存器
     mov ax, SELECTOR_DATA
     mov ds, ax
     mov es, ax
@@ -117,7 +121,7 @@ p_mode_start:
     mov esp, LOADER_STACK_TOP
     mov ax, SELECTOR_VIDEO
     mov gs, ax
-
+;顯示P
     mov byte [gs:160], 'P'
 error_hlt:
 jmp $
@@ -146,18 +150,22 @@ jmp $
 ;    mov esi, 0 
 
 ;--------GDT--------
+;第0個不可用
 GDT_BASE:   
     dd 0x00000000
     dd 0x00000000
 
+;平坦模型下的cs
 GDT_DESC:        
     dd 0x0000ffff
     dd DESC_CODE_HIGH4
 
+;平坦模型下的ds,ss
 DATA_STACK_DESC:    
     dd  0x0000ffff
     dd  DESC_DATA_HIGH4
 
+;文字模式顯卡的記憶體位置 0xb8000~0xbffff ,((0xbffff-0xb8000)+1)/4-1 = 7
 VIDEO_DESC:    
     dd  0x80000007
     dd  DESC_VIDEO_HIGH4

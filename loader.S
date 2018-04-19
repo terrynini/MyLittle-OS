@@ -39,14 +39,15 @@ section loader vstart=LOADER_BASE_ADDR
         jnz e820_mem_get_loop
 
     mov cx, [ards_nr]
-    mov ebx, ards_buf
+    mov ebx, ards_buf - 20
     xor edx, edx
     find_max_mem_area:
-        mov eax, [ebx]
-        add eax, [ebx+8]
         add ebx, 20
+        mov eax, [ebx+8]
         cmp edx, eax
         jge next_ards
+        cmp dword [ebx+16], 1
+        jne next_ards
         mov edx, eax
     next_ards:
         loop find_max_mem_area

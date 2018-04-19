@@ -196,3 +196,36 @@
 |8|LengthLow|記憶體的低32位元，byte為單位|
 |12|LengthHigh|記憶體的高32位元，byte為單位|
 |16|Type|記憶體類型，1:作業系統可使用、2或其他:作業系統不可使用|
+
+### 二級分頁(two level page table)
+
+* 分頁目錄項(Page Directory Entry)
+|bit    |描述    |
+|:-----:|:-----|
+|12~31|分頁表實體位址12~31位|
+|9~11|AVL:Available，無特別意義，作業系統可用|
+|8|G:Global，1表示全域分頁，轉址結果會一直被存在TLB(Translation Lookaside Buffer)|
+|7|0|
+|6|D:Dirty，CPU對一個頁執行寫入操作後，會set此位，僅對PTE有效，不會set PDE中的Dirty|
+|5|A:Accessed，CPU存取過後會被set|
+|4|PCD:Page-level Cache Disable，1表示該分頁啟用cache，反之不開啟|
+|3|PWT:Page-level Write-Through，1表示開啟cache的write-through(write-back較有效率，不需要經常性寫回memory)|
+|2|US:User/Supervisor，1表User級，皆可存取，0表Supervisor級，僅特權0、1、2可存取|
+|1|RW:Read/Write，0表讀取不寫入，1表讀取寫入|
+|0|P:Present，0表不存在實體記憶體上，拋出pagefault異常|
+
+* 分頁表項(Page Table Entry)
+
+|bit    |描述    |
+|:-----:|:-----|
+|12~31|分頁實體位址12~31位|
+|9~11|AVL|
+|8|G|
+|7|PAT:Page Attibute Table，PAT，PCD和PWT位组成Page Attribute Table的索引，能以頁為單位設定記憶體屬性|
+|6|D|
+|5|A|
+|4|PCD|
+|3|PWT|
+|2|US|
+|1|RW|
+|0|P|

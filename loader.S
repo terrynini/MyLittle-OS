@@ -93,7 +93,7 @@ mem_get_ok:
 ;--------進入保護模式--------
 ;1. 開啟 A20 位址線
 ;2. 讀取 Global Descriptor Table
-;3. set cr0 暫存器的 pe 位
+;3. set cr0 暫存器的 PE 位
 
 ;==1==
     in  al, 0x92
@@ -129,8 +129,8 @@ jmp $
 
 ;--------啟用分頁機制--------
 ;1. 設定好 PDE、PTE
-;2. 把分頁位址放進控制暫存器 cr3
-;3. set cr0 暫存器的 pe 位
+;2. 把分頁位址放進控制暫存器 cr3（Page Directory Base Register，PDBR）
+;3. set cr0 暫存器的 PG 位
 
 ;把記憶體清零，等等作為分頁目錄
 ;setup_page:
@@ -160,7 +160,7 @@ GDT_BASE:
     dd 0x00000000
     dd 0x00000000
 
-;平坦模型下的c s
+;平坦模型下的 cs
 GDT_DESC:        
     dd 0x0000ffff
     dd DESC_CODE_HIGH4

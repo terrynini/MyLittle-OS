@@ -11,7 +11,7 @@
 <table>
   <tr>
   	<td align="center">K</td>
-  	<td rowspan="4">12~15 bit<br>背景色<br>K:是否閃爍<br>RGB:RGB比例</td>
+  	<td rowspan="4">12～15 位元<br>背景色<br>K，是否閃爍<br>RGB，RGB比例</td>
   </tr>
   <tr>
   	<td align="center">R</td>
@@ -23,7 +23,7 @@
   	<td align="center">B</td>
   </tr>
   <td align="center">I</td>
-  <td rowspan="4">8~11 bit<br>前景色<br>I:亮度<br>RGB:RGB比例</td>
+  <td rowspan="4">8～11 位元<br>前景色<br>I，亮度<br>RGB，RGB比例</td>
   </tr>
   <tr>
   	<td align="center">R</td>
@@ -36,7 +36,7 @@
   </tr>
   <tr>
     <td align="center">ASCII</td>
-    <td align="center">0~7 bit</td>
+    <td align="center">0～7 位元</td>
   </tr>
 </table>
 
@@ -118,7 +118,7 @@
 ## loader.S
 
 ### Segment Descriptor ([wiki](https://en.wikipedia.org/wiki/Segment_descriptor)) :
-一個segment Descriptor是64bit，`Base Address` 和 `Segment Limit`非常破碎，是由於80286（16位元CPU，擁有保護模式及24位元的位址線）當初做出來試水溫，之後的Intel為了往前兼容，後來的結構才會變成這樣：
+一個 segment Descriptor 是 64bit，`Base Address` 和 `Segment Limit`非常破碎，是由於 80286（16位元 CPU，擁有保護模式及24位元的位址線）當初做出來試水溫，之後的Intel為了往前兼容，後來的結構才會變成這樣：
 <table align="center">
 <tbody><tr>
 <th>31</th>
@@ -163,28 +163,28 @@
 </tbody>
 </table>
 
-*   **G:** 粒度(Granularity)，清零的話表示單位為 1 byte，set時則表示單位為 4096 byte。
+*   **G:** 粒度(Granularity)，清零的話表示單位為 1 byte，set 時則表示單位為 4096 byte。
 *   **實際界限:** (Segment Limit + 1) * Granularity - 1
-    *   Descriptor 中的 Segment limit只是單位，要乘上粒度才能得到真正的界限值
+    *   Descriptor 中的 Segment limit 只是單位，要乘上粒度才能得到真正的界限值
     *   Segment Limit + 1 是因為 Segment Limit 從0算起
     *   最後減1是因為記憶體位址從0開始算起
 *   **S:** S位通常為1，為0時做特殊用途(task-gate, interrupt-gate, call gate, etc)
-*   **type:** 若S為0，用type指定gate，S為1時，最低位A，為Accessed位，被CPU存取過後會被設為1
-    * 第二位R或W，可否讀取或可否寫入
-    * 第三位E或C，擴充方向(堆疊向下，程式資料向上)或一致性(Conforming)
+*   **type:** 若S為0，用 type 指定 gate，S 為1時，最低位 A，為 Accessed 位，被 CPU 存取過後會被設為1
+    * 第二位 R 或 W，可否讀取或可否寫入
+    * 第三位 E 或 C，擴充方向(堆疊向下，程式資料向上)或一致性(Conforming)
 *   **DPL:** Descriptor Privilege Level，特權等級，0~3，0為最高。
-*   **P:**  Present，該段是否存在於記憶體中，不存在則拋出異常，做swap。
+*   **P:**  Present，該段是否存在於記憶體中，不存在則拋出異常，做 swap。
 *   **AVL:** Available，作業系統可以隨意用此位元，無特別用途。
 *   **L:**  為1表示64位元程式碼片段，為0為32位元程式碼片段。
-*   **D:** 為相容80286保護模式還是為16bit(80286為16位元的CPU)，因此有D來表明運算元和有效位址大小，0為16bit，1為32bit。
+*   **D:** 為相容 80286 保護模式還是為 16bit(80286 為16位元的 CPU)，因此有D來表明運算元和有效位址大小，0為 16bit，1為 32bit。
 
 ### 取得記憶體大小:
 使用[BIOS中斷0x15](https://en.wikipedia.org/wiki/BIOS_interrupt_call)來取得記憶體大小:
 
 |AH    |AL    |Description|
 |:----:|:----:|:---------:|
-|88h   |      |最多偵測到64MB的記憶體|
-|E8h   |01h   |檢測低15MB及16MB~4GB的記憶體|
+|88h   |      |最多偵測到 64MB 的記憶體|
+|E8h   |01h   |檢測低 15MB 及 16MB~4GB 的記憶體|
 |E8h   |20h   |可以檢測到全部的記憶體|
 
 ### Address Range Descriptor Structure:
@@ -193,8 +193,8 @@
 |:----:|:--:|:---------|
 |0|BaseAddrLOw|基底位址的低32位|
 |4|BaseAddrHigh|基底位址的高32位|
-|8|LengthLow|記憶體的低32位元，byte為單位|
-|12|LengthHigh|記憶體的高32位元，byte為單位|
+|8|LengthLow|記憶體的低32位元，byte 為單位|
+|12|LengthHigh|記憶體的高32位元，byte 為單位|
 |16|Type|記憶體類型，1:作業系統可使用、2或其他:作業系統不可使用|
 
 ### 二級分頁(two level page table)
@@ -205,15 +205,15 @@
 |:-----:|:-----|
 |12~31|分頁表實體位址12~31位|
 |9~11|AVL:Available，無特別意義，作業系統可用|
-|8|G:Global，1表示全域分頁，轉址結果會一直被存在TLB(Translation Lookaside Buffer)|
+|8|G:Global，1表示全域分頁，轉址結果會一直被存在 TLB(Translation Lookaside Buffer)|
 |7|0|
-|6|D:Dirty，CPU對一個頁執行寫入操作後，會set此位，僅對PTE有效，不會set PDE中的Dirty|
-|5|A:Accessed，CPU存取過後會被set|
-|4|PCD:Page-level Cache Disable，1表示該分頁啟用cache，反之不開啟|
-|3|PWT:Page-level Write-Through，1表示開啟cache的write-through(write-back較有效率，不需要經常性寫回memory)|
-|2|US:User/Supervisor，1表User級，皆可存取，0表Supervisor級，僅特權0、1、2可存取|
+|6|D:Dirty，CPU 對一個頁執行寫入操作後，會 set 此位，僅對 PTE 有效，不會 set PDE 中的 Dirty|
+|5|A:Accessed，CPU 存取過後會被 set|
+|4|PCD:Page-level Cache Disable，1表示該分頁啟用c ache，反之不開啟|
+|3|PWT:Page-level Write-Through，1表示開啟 cache 的 write-through( write-back 較有效率，不需要經常性寫回 memory)|
+|2|US:User/Supervisor，1表 User 級，皆可存取，0表 Supervisor 級，僅特權0、1、2可存取|
 |1|RW:Read/Write，0表讀取不寫入，1表讀取寫入|
-|0|P:Present，0表不存在實體記憶體上，拋出pagefault異常|
+|0|P:Present，0表不存在實體記憶體上，拋出 pagefault 異常|
 
 * 分頁表項(Page Table Entry)
 
@@ -222,7 +222,7 @@
 |12~31|分頁實體位址12~31位|
 |9~11|AVL|
 |8|G|
-|7|PAT:Page Attibute Table，PAT，PCD和PWT位组成Page Attribute Table的索引，能以頁為單位設定記憶體屬性|
+|7|PAT:Page Attibute Table，能以頁為單位設定記憶體屬性|
 |6|D|
 |5|A|
 |4|PCD|

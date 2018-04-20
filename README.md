@@ -11,7 +11,7 @@
 <table>
   <tr>
   	<td align="center">K</td>
-  	<td rowspan="4">12~15 bit<br>背景色<br>K:是否閃爍<br>RGB:RGB比例</td>
+  	<td rowspan="4">１２～１５ ｂｉｔ<br>背景色<br>K:是否閃爍<br>RGB:RGB比例</td>
   </tr>
   <tr>
   	<td align="center">R</td>

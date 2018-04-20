@@ -3,14 +3,14 @@
 LOADER_STACK_TOP equ LOADER_BASE_ADDR
 PAGE_DIR_TABLE_POS  equ 0x100000
 
-;--------GDT相關常數--------
+;--------GDT 相關常數--------
 GDT_SIZE    equ  GDT_END-GDT_BASE
 GDT_LIMIT   equ  GDT_SIZE-1
 ;--------選擇子相關常數--------
 SELECTOR_CODE   equ (0x0001<<3) + TI_GDT + RPL0
 SELECTOR_DATA   equ (0x0002<<3) + TI_GDT + RPL0
 SELECTOR_VIDEO  equ (0x0003<<3) + TI_GDT + RPL0
-;--------記憶體大小記錄在0x510--------
+;--------記憶體大小記錄在 0x510--------
 total_mem_bytes equ 0x510
 
 section loader vstart=LOADER_BASE_ADDR
@@ -107,7 +107,7 @@ mem_get_ok:
     mov cr0, eax
 
 ;用 far jump 來設定段暫存器，使之為保護模式下的選擇子
-;且清空pipeline，避免執行解碼錯誤的指令(真實模式下GDTR只使用低20位，其他位為0，D位會是0，造成把32bit指令解碼為16bit指令)
+;且清空 pipeline，避免執行解碼錯誤的指令(真實模式下 GDTR 只使用低20位，其他位為0，D 位會是0，造成把 32bit 指令解碼為 16bit 指令)
     jmp dword SELECTOR_CODE:p_mode_start
 
 [BITS 32]
@@ -122,12 +122,16 @@ p_mode_start:
     mov esp, LOADER_STACK_TOP
     mov ax, SELECTOR_VIDEO
     mov gs, ax
-;顯示P
+;顯示 P
     mov byte [gs:160], 'P'
 error_hlt:
 jmp $
 
-;--------setup PDE PTE--------
+;--------啟用分頁機制--------
+;1. 設定好 PDE、PTE
+;2. 把分頁位址放進控制暫存器 cr3
+;3. set cr0 暫存器的 pe 位
+
 ;把記憶體清零，等等作為分頁目錄
 ;setup_page:
 ;    mov ecx, 4096
@@ -156,12 +160,12 @@ GDT_BASE:
     dd 0x00000000
     dd 0x00000000
 
-;平坦模型下的cs
+;平坦模型下的c s
 GDT_DESC:        
     dd 0x0000ffff
     dd DESC_CODE_HIGH4
 
-;平坦模型下的ds,ss
+;平坦模型下的 ds,ss
 DATA_STACK_DESC:    
     dd  0x0000ffff
     dd  DESC_DATA_HIGH4

@@ -13,3 +13,4 @@ asm:
 clean:
 	rm *.bin
 	rm kernel/*.bin
+	rm kernel/*.o

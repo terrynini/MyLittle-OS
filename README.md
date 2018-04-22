@@ -2,7 +2,7 @@
 
 **參照《王者歸來：和大師一起動手撰寫一個完整的作業系統》，並沒有完全按照書上實作，有問題可以發issue。**
 
-## Run OS
+## 執行 OS
 
 1. Install boches First
 1. Before use command `make` You should create a image first:<br>

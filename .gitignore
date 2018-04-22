@@ -1,4 +1,6 @@
-*.bin
-*.img
-*.img.lock
+**/.DS_Store
+**.bin
+**.o
+**.img
+**.img.lock
 bochsout.txt

@@ -4,8 +4,8 @@
 
 ## Run OS
 
-Before use command `make` You should create a image first:<br>
-
+1. Install boches First
+1. Before use command `make` You should create a image first:<br>
 ```
 bximage -hd=60 -imgmode="flat" -q hd60M.img
 make

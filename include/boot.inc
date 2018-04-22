@@ -1,9 +1,12 @@
-;----------loader---------------
+;--------loader--------
 
 LOADER_BASE_ADDR    equ 0x600
 LOADER_START_SECTOR equ 0x1
+KERNEL_START_SECTOR equ 0x5
+KERNEL_BASE_ADDR    equ 0x1000
+PAGE_DIR_TABLE_POS  equ 0x100000
 
-;------------GDT----------------
+;--------GDT--------
 G_4K   equ (1<<23)
 D_32   equ (1<<22)
 L_32   equ (0<<21)
@@ -26,7 +29,7 @@ DESC_CODE_HIGH4 equ (0x00<<24) + G_4K + D_32 + L_32 + AVL + LIMIT_CODE2 + P_set 
 DESC_DATA_HIGH4 equ (0x00<<24) + G_4K + D_32 + L_32 + AVL + LIMIT_DATA2 + P_set +DPL_0 + S_set + TYPE_DATA + 0x00
 DESC_VIDEO_HIGH4 equ (0x00<<24)+ G_4K +D_32 + L_32 + AVL + LIMIT_VIDEO2 +P_set + DPL_0 + S_set + TYPE_DATA + 0x0b
 
-;------------------selector------------
+;--------Selector--------
 ;權限
 RPL0    equ 00b
 RPL1    equ 01b
@@ -35,3 +38,10 @@ RPL3    equ 11b
 ;GDT或LDT
 TI_GDT  equ 000b
 TI_LDT  equ 100b
+
+;--------Paging--------
+PG_P    equ     1b 
+PG_RW_R equ     00b 
+PG_RW_W equ     10b 
+PG_US_S equ     000b 
+PG_US_U equ     100b

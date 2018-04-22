@@ -1,7 +1,6 @@
 %include "boot.inc"
 
 LOADER_STACK_TOP equ LOADER_BASE_ADDR
-PAGE_DIR_TABLE_POS  equ 0x100000
 
 ;--------GDT 相關常數--------
 GDT_SIZE    equ  GDT_END-GDT_BASE
@@ -124,35 +123,147 @@ p_mode_start:
     mov gs, ax
 ;顯示 P
     mov byte [gs:160], 'P'
-error_hlt:
-jmp $
+;--------載入 kernel--------
+    mov ax, KERNEL_START_SECTOR
+    mov bx, KERNEL_BASE_ADDR
+    mov cx, 20
+
+    call read_disk
 
 ;--------啟用分頁機制--------
-;1. 設定好 PDE、PTE
+;1. 設定好 Page Directory，Page Table
 ;2. 把分頁位址放進控制暫存器 cr3（Page Directory Base Register，PDBR）
 ;3. set cr0 暫存器的 PG 位
 
-;把記憶體清零，等等作為分頁目錄
-;setup_page:
-;    mov ecx, 4096
-;    mov esi, 0
-;    clear_page_dir:
-;        mov byte [PAGE_DIR_TABLE_POS + esi], 0
-;        inc esi
-;        loop clear_page_dir
-;create_pde:
-;    mov eax, PAGE_DIR_TABLE_POS
-;    add eax, 0x1000
-;    mov ebx, eax
-;
-;    or eax, PG_US_U | PG_RW_W | PG_P
-;    mov [PAGE_DIR_TABLE_POS + 0x0], eax
-;    mov [PAGE_DIR_TABLE_POS + 0xc00], eax
-;    sub eax, 0x1000
-;    mov [PAGE_DIR_TABLE_POS + 4092], eax
-;    
-;    mov ecx, 256
-;    mov esi, 0 
+;==1==
+    call setup_page
+;要修改選擇子，否則開啟分頁後會找錯實體位址
+    sgdt [gdt_ptr]
+
+    mov ebx, [gdt_ptr + 2]
+    or dword [ebx + 0x18 + 4], 0xc0000000
+
+    add dword [gdt_ptr + 2], 0xc0000000
+
+;==2==
+    mov eax, PAGE_DIR_TABLE_POS
+    mov cr3, eax
+;==3==    
+    mov eax, cr0
+    or eax, 0x80000000
+    mov cr0, eax
+;重新讀取分頁下的 gdt    
+    lgdt [gdt_ptr]
+
+    mov byte[gs:160], 'V'
+
+    mov esp, 0xc009f000
+    jmp 0xc0000000 | KERNEL_BASE_ADDR
+error_hlt:
+    jmp $
+
+read_disk:
+;--------------------------------
+;從硬碟載入到記憶體
+;ax:LBA 編號，bx: 載入位址, cx: 載入 block 數
+;--------------------------------
+    mov esi, eax
+    mov di, cx
+
+    mov dx, 0x1f2
+    mov al, cl
+    out dx, al
+
+    mov eax, esi
+
+    mov dx, 0x1f3
+    out dx, al
+
+    mov cl, 8
+    shr eax, cl
+    mov dx, 0x1f4
+    out dx, al
+
+    shr eax, cl
+    mov dx, 0x1f5
+    out dx, al
+
+    shr eax, cl
+    and al, 0x0f    ;24~27 bits for lba
+    or  al, 0xe0    ;lba mode
+    mov dx, 0x1f6
+    out dx, al
+
+    mov dx, 0x1f7
+    mov al, 0x20    ;0x20 is read
+    out dx, al
+
+    not_ready:
+        nop
+        in al, dx
+        and al, 0x88
+        cmp al, 0x08
+        jnz not_ready
+
+    mov ax, di
+    mov dx, 256
+    mul dx
+    mov cx, ax
+    mov dx, 0x1f0
+    go_on_read:
+        in ax, dx
+        mov [bx], ax
+        add bx, 2
+        loop go_on_read
+    ret
+
+
+setup_page:
+;--------------------------------
+;設定 PDE，PTE
+;--------------------------------
+;每個 PDE 佔 4byte，共 1k 項，要清空 4096byte 的空間
+    mov ecx, 1024
+    mov esi, 0
+    clear_page_dir:
+        mov dword [PAGE_DIR_TABLE_POS + esi*4], 0
+        inc esi
+        loop clear_page_dir
+;我們將 PDE PTE 連續放置，所以 PAGE_DIR_TABLE_POS + 0x1000 是第一個 PTE
+create_pde:
+    mov eax, PAGE_DIR_TABLE_POS
+    add eax, 0x1000
+    mov ebx, eax
+    or eax, PG_US_U | PG_RW_W | PG_P
+;讓分頁目錄項的 0x0（第0項）、0xc00（第768項）都存第一分頁的位址
+    mov [PAGE_DIR_TABLE_POS + 0x0], eax
+    mov [PAGE_DIR_TABLE_POS + 0xc00], eax
+;讓分頁目錄表的最後一項指向 PAGE_DIR_TABLE_POS
+    sub eax, 0x1000
+    mov [PAGE_DIR_TABLE_POS + 4092], eax
+
+;每個 PTE 表 4k 實體對應，1M／4k＝256  
+    mov ecx, 256
+    mov esi, 0 
+    mov edx, PG_US_U | PG_RW_W | PG_P 
+create_pte:
+    mov [ebx+esi*4], edx
+    add edx, 4096
+    inc esi
+    loop create_pte
+
+    mov eax, PAGE_DIR_TABLE_POS
+    add eax, 0x2000
+    or eax,  PG_US_U | PG_RW_W | PG_P
+    mov ebx, PAGE_DIR_TABLE_POS
+    mov ecx, 254
+    mov esi, 769
+create_kernel_pde:
+    mov [ebx+esi*4], eax
+    inc esi
+    add eax, 0x1000
+    loop create_kernel_pde
+    ret
 
 ;--------GDT--------
 ;第0個不可用
@@ -161,11 +272,11 @@ GDT_BASE:
     dd 0x00000000
 
 ;平坦模型下的 cs
-GDT_DESC:        
+GDT_DESC:
     dd 0x0000ffff
     dd DESC_CODE_HIGH4
 
-;平坦模型下的 ds,ss
+;平坦模型下的 ds，ss
 DATA_STACK_DESC:    
     dd  0x0000ffff
     dd  DESC_DATA_HIGH4

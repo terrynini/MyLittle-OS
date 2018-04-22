@@ -54,10 +54,10 @@ SECTION MBR vstart=0x7c00
     jmp LOADER_BASE_ADDR
 
 read_disk:
-;---------------------------------------------
+;--------------------------------
 ;read loder from disk
 ;eax:LBA num, bx: data address, cx:number of blocks
-;---------------------------------------------
+;--------------------------------
 ;maintain the origin value
     mov esi, eax
     mov di, cx

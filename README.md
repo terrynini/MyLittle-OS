@@ -1,9 +1,16 @@
-# ReturnOfKing-OS
+# MyLittle-OS
 
-**Before use command `make` You should create a image first:**<br>
-`bximage -hd=60 -imgmode="flat" -q hd60M.img`<br>
-`make`<br>
-`boches`
+**參照《王者歸來：和大師一起動手撰寫一個完整的作業系統》，並沒有完全按照書上實作，有問題可以發issue。**
+
+## Run OS
+
+Before use command `make` You should create a image first:<br>
+
+```
+bximage -hd=60 -imgmode="flat" -q hd60M.img
+make
+boches
+```
 
 ## mbr.S
 ### 在顯卡文字模式下，使用連續兩bytes來顯示一個字元，其結構如下：
@@ -176,7 +183,7 @@
 *   **P：**  Present，該段是否存在於記憶體中，不存在則拋出異常，做 swap。
 *   **AVL：** Available，作業系統可以隨意用此位元，無特別用途。
 *   **L：**  為1表示64位元程式碼片段，為0為32位元程式碼片段。
-*   **D：** 為相容 80286 保護模式還是為 16bit(80286 為16位元的 CPU)，因此有D來表明運算元和有效位址大小，0為 16bit，1為 32bit。
+*   **D：** 為相容 80286 保護模式還是為 16bit(80286 為16位元的 CPU)，因此有 D 來表明運算元和有效位址大小，0為 16bit，1為 32bit。
 
 ### 取得記憶體大小：
 使用[BIOS中斷0x15](https://en.wikipedia.org/wiki/BIOS_interrupt_call)來取得記憶體大小:
@@ -230,3 +237,13 @@
 |2|US|
 |1|RW|
 |0|P|
+
+* cr3
+
+|bit    |描述    |
+|:-----:|:-----|
+|12~31|分頁目錄表實體位址12～31位|
+|5~11|沒有用|
+|4|PCD|
+|3|PWT|
+|0~2|沒有用|

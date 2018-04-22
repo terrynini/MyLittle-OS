@@ -5,10 +5,7 @@ LOADER_STACK_TOP equ LOADER_BASE_ADDR
 ;--------GDT 相關常數--------
 GDT_SIZE    equ  GDT_END-GDT_BASE
 GDT_LIMIT   equ  GDT_SIZE-1
-;--------選擇子相關常數--------
-SELECTOR_CODE   equ (0x0001<<3) + TI_GDT + RPL0
-SELECTOR_DATA   equ (0x0002<<3) + TI_GDT + RPL0
-SELECTOR_VIDEO  equ (0x0003<<3) + TI_GDT + RPL0
+
 ;--------記憶體大小記錄在 0x510--------
 total_mem_bytes equ 0x510
 

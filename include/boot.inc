@@ -38,7 +38,10 @@ RPL3    equ 11b
 ;GDT或LDT
 TI_GDT  equ 000b
 TI_LDT  equ 100b
-
+;--------選擇子相關常數--------
+SELECTOR_CODE   equ (0x0001<<3) + TI_GDT + RPL0
+SELECTOR_DATA   equ (0x0002<<3) + TI_GDT + RPL0
+SELECTOR_VIDEO  equ (0x0003<<3) + TI_GDT + RPL0
 ;--------Paging--------
 PG_P    equ     1b 
 PG_RW_R equ     00b 

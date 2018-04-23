@@ -8,8 +8,9 @@ img:asm
 asm:
 	nasm -I include/ -o mbr.bin mbr.S
 	nasm -I include/ -o loader.bin loader.S
-	nasm -I include/ -o print.bin lib/print.S
-	gcc -c -o kernel/main.o kernel/main.c && ld kernel/main.o -Ttext 0xc0001000 -o kernel/main.bin
+	nasm -I include/ -f elf32 -o lib/print.o lib/print.S
+	gcc  -I lib/ -m32 -c -o kernel/main.o kernel/main.c
+	ld -m elf_i386  kernel/main.o lib/print.o -Ttext 0xc0001000 -o kernel/main.bin
 	objcopy -O binary -j .text kernel/main.bin kernel/kernel.bin
 clean:
 	rm *.bin

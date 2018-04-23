@@ -11,7 +11,7 @@ asm:
 	nasm -I include/ -f elf32 -o lib/print.o lib/print.S
 	gcc  -I lib/ -m32 -c -o kernel/main.o kernel/main.c
 	ld -m elf_i386  kernel/main.o lib/print.o -Ttext 0xc0001000 -o kernel/main.bin
-	objcopy -O binary -j .text kernel/main.bin kernel/kernel.bin
+	objcopy -O binary kernel/main.bin kernel/kernel.bin
 clean:
 	rm *.bin
 	rm kernel/*.bin

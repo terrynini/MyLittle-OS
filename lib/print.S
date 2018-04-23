@@ -1,5 +1,6 @@
 %include "boot.inc"
 
+global put_str
 global put_char
 
 [bits 32]
@@ -97,4 +98,23 @@ set_cursor:
     
 put_char_end:
     popad
+    ret
+
+put_str:
+    push ebx
+    push ecx
+    xor ecx, ecx
+    mov ebx, [esp + 12]
+next_char_in_str:
+    mov cl, [ebx]
+    cmp cl, 0
+    jz  str_terminal
+    push ecx
+    call put_char
+    add esp, 4
+    inc ebx
+    jmp next_char_in_str
+str_terminal:
+    pop ecx
+    pop ebx
     ret

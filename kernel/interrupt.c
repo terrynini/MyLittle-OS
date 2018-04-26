@@ -12,14 +12,6 @@
 
 extern intr_handler intr_entry_table[IDT_DESC_CNT];
 
-typedef struct{
-    uint16_t    func_offset_low_word;
-    uint16_t    selector;
-    uint8_t     dcount;
-    uint8_t     attribute;
-    uint16_t    func_offset_high_word;
-} gate_desc;
-
 static gate_desc idt[IDT_DESC_CNT];
 
 static void pic_init(){
@@ -36,7 +28,7 @@ static void pic_init(){
     outb(PIC_M_DATA, 0xfe);
     outb(PIC_S_DATA, 0xff);
 
-    put_str("\tpic_init done\n");
+    put_str("    pic_init done\n");
 }
 
 static void make_idt_desc(gate_desc* p_gdesc, uint8_t attr, intr_handler function){
@@ -52,7 +44,7 @@ static void idt_desc_init(){
    for( i = 0 ; i < IDT_DESC_CNT ; i++){
        make_idt_desc(&idt[i], IDT_DESC_ATTR_DPL0, intr_entry_table[i]);
    }
-   put_str("\tidt_desc_init done\n"); 
+   put_str("    idt_desc_init done\n"); 
 }
 
 void idt_init(){

@@ -1,3 +1,5 @@
+/*打包簡單的通訊埠讀寫*/
+
 #ifndef __LIB_IO_H
 #define __LIB_IO_H
 #include "stdint.h"

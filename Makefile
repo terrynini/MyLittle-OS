@@ -16,7 +16,7 @@ asm:
 	gcc   $(LIB) -m32 -c $(CFLAGS) -o $(BUILD_DIR)/main.o kernel/main.c
 	gcc   $(LIB) -m32 -c $(CFLAGS) -o $(BUILD_DIR)/interrupt.o kernel/interrupt.c
 	gcc   $(LIB) -m32 -c $(CFLAGS) -o $(BUILD_DIR)/init.o kernel/init.c
-	ld -m elf_i386  -Ttext 0xc0001000  -o $(BUILD_DIR)/main.bin $(BUILD_DIR)/*.o
+	ld -m elf_i386  -Ttext 0xc0001000 -e main -o $(BUILD_DIR)/main.bin $(BUILD_DIR)/*.o
 	objcopy -O binary $(BUILD_DIR)/main.bin $(BUILD_DIR)/kernel.bin
 clean:
 	rm $(BUILD_DIR)/*.*

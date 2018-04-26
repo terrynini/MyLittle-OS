@@ -2,9 +2,14 @@
 
 global put_str
 global put_char
+global put_int
 
 [bits 32]
+
 put_char:
+;----------------
+;列印字元
+;----------------
     pushad
     mov ax, SELECTOR_VIDEO
     mov gs, ax
@@ -101,6 +106,9 @@ put_char_end:
     ret
 
 put_str:
+;----------------
+;列印 0x0 結尾的字串
+;----------------
     push ebx
     push ecx
     xor ecx, ecx
@@ -117,4 +125,27 @@ next_char_in_str:
 str_terminal:
     pop ecx
     pop ebx
+    ret
+
+put_int:
+;----------------
+;列印 32 bit 十進位數字
+;----------------
+    pushad
+    mov eax, [esp + 36]
+    mov ebx, 10
+    xor ecx, ecx
+    divide_by_ten:
+        xor edx, edx
+        div ebx
+        add edx, 48
+        push edx
+        inc  ecx
+        test eax, eax
+        jne divide_by_ten
+    reverse_print:
+        call put_char
+        add esp, 4
+        loop reverse_print
+    popad
     ret
